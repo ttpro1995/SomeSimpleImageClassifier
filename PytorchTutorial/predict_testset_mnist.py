@@ -1,7 +1,7 @@
 from image_folder_with_path import ImageFolderWithPaths
 import torch
 import torchvision
-from model.tutorial_net import MnistTutorialNet
+from model.tutorial_net import MnistTutorialNetV2
 from util import get_img_id
 
 if __name__ == "__main__":
@@ -11,12 +11,12 @@ if __name__ == "__main__":
     just make sure the model learn something. we should not evaluate model on training set
     -- Meow --
     """
-    model_path = "/data/cv_data/minist/mnistasjpg/saved_model/MnistTutorialNet_1__31.509719610214233.model"
+    model_path = "/data/cv_data/minist/mnistasjpg/saved_model3/MnistTutorialNet_19__4.900279708264861.model"
     # at beginning of the script
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # define net
-    net = MnistTutorialNet()
+    net = MnistTutorialNetV2()
     # load model
     net.load_state_dict(torch.load(model_path))
 

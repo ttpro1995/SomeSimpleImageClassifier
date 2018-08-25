@@ -2,3 +2,7 @@
 *.pyc
 
 PytorchTutorial/\.idea/
+
+AiLab/\.idea/
+
+PytorchTutorial/result\.txt

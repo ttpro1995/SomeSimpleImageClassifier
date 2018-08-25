@@ -1,6 +1,6 @@
 import torch.optim as optim
 import torch.nn as nn
-from model.tutorial_net import MnistTutorialNet
+from model.tutorial_net import MnistTutorialNetV2
 import os
 
 import torchvision
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # define net
-    net = MnistTutorialNet()
+    net = MnistTutorialNetV2()
     net = net.to(device) # cuda or cpu
 
     #
@@ -25,8 +25,8 @@ if __name__ == "__main__":
 
 
     # define a loss function
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+    criterion = nn.NLLLoss()
+    optimizer = optim.Adam(net.parameters(), weight_decay=1e-6)
 
     for epoch in range(20):  # loop over the dataset multiple times
 
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
 
         # save model # https://pytorch.org/docs/stable/notes/serialization.html
-        save_path = os.path.join("/data/cv_data/minist/mnistasjpg/saved_model2/",
+        save_path = os.path.join("/data/cv_data/minist/mnistasjpg/saved_model3/",
                                  "MnistTutorialNet_" + str(epoch) + "__" + str(running_loss) + ".model")
         torch.save(net.state_dict(), save_path)
         print("saved " + save_path)
