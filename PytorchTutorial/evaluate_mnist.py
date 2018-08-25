@@ -32,11 +32,12 @@ if __name__ == "__main__":
                                               batch_size=4,
                                               shuffle=True,
                                               num_workers=3)
+
     correct = 0
     total = 0
     with torch.no_grad():
-        for data in data_loader:
-            images, labels = data
+        for datapoint in data_loader:
+            images, labels = datapoint
             images = images.to(device)
             labels = labels.to(device)
             outputs = net(images)
