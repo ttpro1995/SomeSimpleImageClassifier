@@ -1,4 +1,4 @@
-The code, main_mnist follow tutorial here (https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html)
+The code, ```main_mnist.py``` follow tutorial here (https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html)
 
 However, it use Mnist dataset as jpg (https://www.kaggle.com/scolianni/mnistasjpg).
 
@@ -15,3 +15,5 @@ data_loader = torch.utils.data.DataLoader(imagenet_data,
                                               shuffle=True,
                                               num_workers=3)
 ```
+
+The code, ```evaluate_mnist.py``` shows how to load trained model and call predict. 
