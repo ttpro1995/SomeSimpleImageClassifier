@@ -3,17 +3,22 @@ import torch.nn as nn
 import torch.nn.functional as F
 from model.tutorial_net import MnistTutorialNet
 from data_manager import DataManager
+import os
 
 import torchvision
 import torch
 
 if __name__ == "__main__":
 
+    # at beginning of the script
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
     # define net
     net = MnistTutorialNet()
+    net = net.to(device) # cuda or cpu
 
     #
-    imagenet_data = torchvision.datasets.ImageFolder(root='/data/cv_data/minis/mnistasjpg/trainingSet/',
+    imagenet_data = torchvision.datasets.ImageFolder(root='/data/cv_data/minist/mnistasjpg/trainingSet/',
                                                      transform=torchvision.transforms.ToTensor())
     data_loader = torch.utils.data.DataLoader(imagenet_data,
                                               batch_size=4,
@@ -31,6 +36,8 @@ if __name__ == "__main__":
         for i, data in enumerate(data_loader, 0):
             # get the inputs
             inputs, labels = data
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -47,5 +54,12 @@ if __name__ == "__main__":
                 print('[%d, %5d] loss: %.3f' %
                       (epoch + 1, i + 1, running_loss / 2000))
                 running_loss = 0.0
+
+
+        # save model # https://pytorch.org/docs/stable/notes/serialization.html
+        save_path = os.path.join("/data/cv_data/minist/mnistasjpg/saved_model/",
+                                 "MnistTutorialNet_" + str(epoch) + "__" + str(running_loss) + ".model")
+        torch.save(net.state_dict(), save_path)
+        print("saved " + save_path)
 
     print('Finished Training')
