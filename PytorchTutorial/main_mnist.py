@@ -1,8 +1,6 @@
 import torch.optim as optim
 import torch.nn as nn
-import torch.nn.functional as F
 from model.tutorial_net import MnistTutorialNet
-from data_manager import DataManager
 import os
 
 import torchvision
