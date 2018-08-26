@@ -4,6 +4,8 @@ import torchvision
 from model.tutorial_net import MnistTutorialNetV2
 from util import get_img_id
 
+
+
 if __name__ == "__main__":
     """
     This script load trained model and run on training set again
