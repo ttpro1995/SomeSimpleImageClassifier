@@ -1,6 +1,6 @@
 import torch.optim as optim
 import torch.nn as nn
-from model.tutorial_net import MnistTutorialNetV2
+from model.tutorial_net import MnistTutorialNetV4
 import os
 
 import torchvision
@@ -12,23 +12,23 @@ if __name__ == "__main__":
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # define net
-    net = MnistTutorialNetV2()
+    net = MnistTutorialNetV4()
     net = net.to(device) # cuda or cpu
 
     #
     imagenet_data = torchvision.datasets.ImageFolder(root='/data/cv_data/minist/mnistasjpg/trainingSet/',
                                                      transform=torchvision.transforms.ToTensor())
     data_loader = torch.utils.data.DataLoader(imagenet_data,
-                                              batch_size=100,
+                                              batch_size=1000,
                                               shuffle=True,
-                                              num_workers=3)
+                                              num_workers=4)
 
 
     # define a loss function
     criterion = nn.NLLLoss()
     optimizer = optim.Adam(net.parameters(), weight_decay=1e-6)
 
-    for epoch in range(20):  # loop over the dataset multiple times
+    for epoch in range(100):  # loop over the dataset multiple times
 
         running_loss = 0.0
         for i, data in enumerate(data_loader, 0):
@@ -55,8 +55,8 @@ if __name__ == "__main__":
 
 
         # save model # https://pytorch.org/docs/stable/notes/serialization.html
-        save_path = os.path.join("/data/cv_data/minist/mnistasjpg/saved_model3/",
-                                 "MnistTutorialNet_" + str(epoch) + "__" + str(running_loss) + ".model")
+        save_path = os.path.join("/data/cv_data/minist/mnistasjpg/saved_model6/",
+                                 "MnistTutorialNetV4_" + str(epoch) + "__" + str(running_loss) + ".model")
         torch.save(net.state_dict(), save_path)
         print("saved " + save_path)
 
