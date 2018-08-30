@@ -69,6 +69,6 @@ class MnistTutorialNetV2(nn.Module):
         x = x.view(-1, 16 * 117 * 117)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = F.tanh(self.dropout(self.fc_mid(x)))
+        x = F.relu(self.fc_mid(self.dropout(x)))
         x = F.log_softmax((self.fc3(x)))
         return x

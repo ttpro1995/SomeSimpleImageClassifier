@@ -23,8 +23,14 @@ class ImageFolderWithPaths(datasets.ImageFolder):
 
 
 def remove_none_collate(batch):
-    batch = list(filter(lambda x:x is not None, batch))
-    return default_collate(batch)
+    try:
+        batch = list(filter(lambda x:x is not None, batch))
+        ret = default_collate(batch)
+        return ret
+    except:
+        print("error at remove none collate")
+        ret = None
+        return ret
 
 
 def example():

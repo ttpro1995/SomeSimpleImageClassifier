@@ -1,1 +1,0 @@
-from .strtool import get_img_id
