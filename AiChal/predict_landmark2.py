@@ -24,7 +24,7 @@ if __name__ == "__main__":
     landmark_input = "/data/cv_data/TrainVal"
     # model_base_path = "/home/zdeploy/thient/model/landmark/landmark1"
 
-    # landmark_input = "/data/voice_zaloai/recognition/train/"
+    # landmark_input = "/data/voice_zaloai/recognition/test"
     # model_base_path = "/home/zdeploy/thient/model/landmark/landmark1"
     print("path----------")
     print(landmark_input)
