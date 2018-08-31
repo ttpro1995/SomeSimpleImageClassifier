@@ -135,8 +135,4 @@ if __name__ == "__main__":
                     pending_str += str(pred.item()) + " "
                 resultfile.write(pending_str + "\n")
 
-    print(val_correct)
-    print(val_total)
-    print(1.0 * val_correct/ val_total)
-
     print('Finished Training')
