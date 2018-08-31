@@ -1,6 +1,6 @@
 import torch.optim as optim
 import torch.nn as nn
-from model.tutorial_net import MnistTutorialNetV2
+from model.tutorial_net import MnistTutorialNetV4
 import os
 from torchvision import transforms, utils
 from torchvision.transforms import Resize, ToTensor
@@ -17,11 +17,11 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 if __name__ == "__main__":
 
     # at beginning of the script
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
 
     # filepath
     landmark_input = "/data/cv_data/TrainVal"
-    model_base_path = "/home/zdeploy/thient/model/landmark/landmark1"
+    model_base_path = "/home/zdeploy/thient/model/landmark/landmark_weak1"
 
     # landmark_input = "/data/voice_zaloai/recognition/train/"
     # model_base_path = "/home/zdeploy/thient/model/landmark/landmark1"
@@ -32,23 +32,8 @@ if __name__ == "__main__":
 
 
     # define net
-    # net = MnistTutorialNetV2()
-
-    model_conv = torchvision.models.vgg11(pretrained=True)
-
-    # Number of filters in the bottleneck layer
-    num_ftrs = model_conv.classifier[6].in_features
-
-    # convert all the layers to list and remove the last one
-    features = list(model_conv.classifier.children())[:-1]
-
-    ## Add the last layer based on the num of classes in our dataset
-    features.extend([nn.Linear(num_ftrs, 103)])
-
-    ## convert it into container and add it to our model class.
-    model_conv.classifier = nn.Sequential(*features)
-
-    net = model_conv.to(device)  # cuda or cpu
+    net = MnistTutorialNetV4()
+    net = net.to(device)
 
 
 
