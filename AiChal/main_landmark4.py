@@ -17,7 +17,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 if __name__ == "__main__":
 
     # at beginning of the script
-    device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
 
     # filepath
     landmark_input = "/data/cv_data/TrainVal"
