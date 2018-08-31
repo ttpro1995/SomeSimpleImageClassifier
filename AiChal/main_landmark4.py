@@ -20,11 +20,11 @@ if __name__ == "__main__":
     device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
 
     # filepath
-    landmark_input = "/data/cv_data/TrainVal"
-    model_base_path = "/home/zdeploy/thient/model/landmark/landmark3"
+    # landmark_input = "/data/cv_data/TrainVal"
+    model_base_path = "/home/zdeploy/thient/model/landmark/landmark4"
 
-    # landmark_input = "/data/voice_zaloai/recognition/train/"
-    # model_base_path = "/home/zdeploy/thient/model/landmark/landmark3"
+    landmark_input = "/data/voice_zaloai/recognition/train/"
+    # model_base_path = "/home/zdeploy/thient/model/landmark/landmark4"
     print("path----------")
     print(landmark_input)
     print(model_base_path)
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     train_transform, val_transform = vgg_transformation(normalize=normalize)
 
-    train_loader, val_loader = get_train_valid_loader_v2(landmark_input, 2, 113,
+    train_loader, val_loader = get_train_valid_loader_v2(landmark_input, 40, 113,
                                                          train_transform, val_transform,
                                                          0.1, True, 1, True)
 
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
         # save model # https://pytorch.org/docs/stable/notes/serialization.html
         save_path = os.path.join(model_base_path,
-                                 "vgg11" + str(epoch) + "_" + str(running_loss) + ".model")
+                                 "vgg16_" + str(epoch) + "_" + str(running_loss) + ".model")
         torch.save(net.state_dict(), save_path)
         print("saved " + save_path)
 
