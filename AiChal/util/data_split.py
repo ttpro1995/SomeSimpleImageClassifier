@@ -12,6 +12,63 @@ from torch.utils.data.sampler import SubsetRandomSampler
 https://gist.github.com/kevinzakka/d33bf8d6c7f06a9d8c76d97a7879f5cb
 """
 
+def get_train_valid_loader_v2(data_dir,
+                           batch_size,
+                           random_seed,
+                           train_transform, val_transform,
+                           valid_size=0.1,
+                           shuffle=True,
+                           num_workers=4,
+                           pin_memory=False,
+                           ):
+    """
+
+    :param data_dir:
+    :param batch_size:
+    :param random_seed:
+    :param train_transform:
+    :param val_transform:
+    :param valid_size:
+    :param shuffle:
+    :param num_workers:
+    :param pin_memory: true if use cuda
+    :return:
+    """
+
+    error_msg = "[!] valid_size should be in the range [0, 1]."
+    assert ((valid_size >= 0) and (valid_size <= 1)), error_msg
+
+    train_dataset = ImageFolderWithPaths(root=data_dir,
+                                         transform=train_transform
+                                         )
+
+    val_dataset = ImageFolderWithPaths(root=data_dir,
+                                         transform=val_transform
+                                         )
+
+    num_train = len(train_dataset)
+    indices = list(range(num_train))
+    split = int(np.floor(valid_size * num_train))
+
+    if shuffle:
+        np.random.seed(random_seed)
+        np.random.shuffle(indices)
+
+    train_idx, valid_idx = indices[split:], indices[:split]
+    train_sampler = SubsetRandomSampler(train_idx)
+    valid_sampler = SubsetRandomSampler(valid_idx)
+
+    train_loader = torch.utils.data.DataLoader(
+        train_dataset, batch_size=batch_size, sampler=train_sampler,
+        num_workers=num_workers, pin_memory=pin_memory,  collate_fn=remove_none_collate
+    )
+    valid_loader = torch.utils.data.DataLoader(
+        val_dataset, batch_size=batch_size, sampler=valid_sampler,
+        num_workers=num_workers, pin_memory=pin_memory,  collate_fn=remove_none_collate
+    )
+
+    return (train_loader, valid_loader)
+
 
 def get_train_valid_loader(data_dir,
                            batch_size,
