@@ -19,9 +19,20 @@ if __name__ == "__main__":
     # at beginning of the script
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+    # filepath
+    landmark_input = "/data/cv_data/TrainVal"
+    model_base_path = "/home/zdeploy/thient/model/landmark/landmark1"
+
+    # landmark_input = "/data/voice_zaloai/recognition/train/"
+    # model_base_path = "/home/zdeploy/thient/model/landmark/landmark1"
+    print("path----------")
+    print(landmark_input)
+    print(model_base_path)
+    print("===============")
+
+
     # define net
-    net = MnistTutorialNetV2()
-    net = net.to(device)  # cuda or cpu
+    # net = MnistTutorialNetV2()
 
     model_conv = torchvision.models.vgg11(pretrained=True)
 
@@ -37,9 +48,9 @@ if __name__ == "__main__":
     ## convert it into container and add it to our model class.
     model_conv.classifier = nn.Sequential(*features)
 
+    net = model_conv.to(device)  # cuda or cpu
 
-    landmark_input = "/data/cv_data/ai/again/TrainVal/"
-    mnist_input = "/data/cv_data/minist/mnistasjpg/trainingSet/"
+
 
     #
     # imagenet_data = ImageFolderWithPaths(root=landmark_input,
@@ -50,19 +61,27 @@ if __name__ == "__main__":
     #                                      ])
     #                                      )
 
-    train_loader, val_loader = get_train_valid_loader(landmark_input, 10, 113, 0.1, True, 1, True)
+
+    # for vgg model
+    normalize = transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225],
+    )
+
+
+    train_loader, val_loader = get_train_valid_loader(landmark_input, 2, 113, 0.1, True, 1, True, normalize=normalize)
 
 
 
     # define a loss function
     criterion = nn.NLLLoss()
+    nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), weight_decay=1e-6)
 
     for epoch in range(20):  # loop over the dataset multiple times
 
         running_loss = 0.0
         for i, data in enumerate(train_loader, 0):
-
             try:
                 # get the inputs
                 # mnist 100 3 28 28
@@ -92,9 +111,27 @@ if __name__ == "__main__":
             except:
                 print("discard batch")
 
+        val_correct = 0
+        val_total = 0
+
+        for datapoint in val_loader:
+            images, labels, path = datapoint
+            images = images.to(device)
+            # labels = labels.to(device)
+            outputs = net(images)
+            _, predicted = torch.max(outputs.data, 1)
+            corrects = torch.sum(predicted == labels.data)
+            total = len(labels.data)
+            val_correct += corrects.item()
+            val_total += total
+
+        print(val_correct)
+        print(val_total)
+        print(1.0 * val_correct/ val_total)
+
         # save model # https://pytorch.org/docs/stable/notes/serialization.html
-        save_path = os.path.join("/data/cv_data/ai/saved/landmark3",
-                                 "vgg11" + str(epoch) + "__" + str(running_loss) + ".model")
+        save_path = os.path.join(model_base_path,
+                                 "vgg11" + str(epoch) + "_" + str(running_loss) + ".model")
         torch.save(net.state_dict(), save_path)
         print("saved " + save_path)
 

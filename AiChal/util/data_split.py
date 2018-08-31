@@ -19,7 +19,8 @@ def get_train_valid_loader(data_dir,
                            valid_size=0.1,
                            shuffle=True,
                            num_workers=4,
-                           pin_memory=False):
+                           pin_memory=False,
+                           normalize=None):
     """
     Utility function for loading and returning train and valid
     multi-process iterators over the CIFAR-10 dataset. A sample
@@ -70,6 +71,42 @@ def get_train_valid_loader(data_dir,
     #         normalize,
     #     ])
 
+    # train_transform = transforms.Compose([
+    #     transforms.ToTensor(),
+    #     nomalize,
+    # ])
+
+    # https://github.com/pytorch/examples/blob/42e5b996718797e45c46a25c55b031e6768f8440/imagenet/main.py#L89-L101
+    # copy transformation for vgg here
+
+    if (normalize is not None):
+        train_transform = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ])
+        val_transform = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            normalize,
+        ])
+    else:
+        train_transform = transforms.Compose([
+            transforms.RandomSizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor()
+        ])
+
+        val_transform = transforms.Compose([
+            transforms.Scale(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor()
+        ])
+
+
+
     # # load the dataset
     # train_dataset = datasets.CIFAR10(
     #     root=data_dir, train=True,
@@ -81,9 +118,15 @@ def get_train_valid_loader(data_dir,
     #     download=True, transform=valid_transform,
     # )
 
+
     train_dataset = ImageFolderWithPaths(root=data_dir,
-                                         transform=ToTensor()
+                                         transform=train_transform
                                          )
+
+    val_dataset = ImageFolderWithPaths(root=data_dir,
+                                         transform=val_transform
+                                         )
+
 
     num_train = len(train_dataset)
     indices = list(range(num_train))
@@ -102,7 +145,7 @@ def get_train_valid_loader(data_dir,
         num_workers=num_workers, pin_memory=pin_memory,  collate_fn=remove_none_collate
     )
     valid_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=batch_size, sampler=valid_sampler,
+        val_dataset, batch_size=batch_size, sampler=valid_sampler,
         num_workers=num_workers, pin_memory=pin_memory,  collate_fn=remove_none_collate
     )
 
