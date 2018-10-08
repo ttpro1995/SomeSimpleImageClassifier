@@ -1,8 +1,10 @@
 import torch.optim as optim
 import torch.nn as nn
+
+from image_folder_with_path import ImageFolderWithPaths
 from model.tutorial_net import MnistTutorialNetV4
 import os
-
+from torch.utils.data.dataloader import DataLoader
 import torchvision
 import torch
 
@@ -16,10 +18,17 @@ if __name__ == "__main__":
     net = net.to(device) # cuda or cpu
 
     #
-    imagenet_data = torchvision.datasets.ImageFolder(root='/data/cv_data/minist/mnistasjpg/trainingSet/',
-                                                     transform=torchvision.transforms.ToTensor())
+    # imagenet_data = torchvision.datasets.ImageFolder(root='/data/cv_data/minist/mnistasjpg/trainingSet/',
+                                                    #  transform=torchvision.transforms.ToTensor())
+
+    # imagenet_data = ImageFolderWithPaths(root='/data/cv_data/minist/mnistasjpg/trainingSet/',
+    #                                                  transform=torchvision.transforms.ToTensor())
+
+    imagenet_data = ImageFolderWithPaths(root='/data/cv_data/ai/again/TrainVal/',
+                                         transform=torchvision.transforms.ToTensor())
+
     data_loader = torch.utils.data.DataLoader(imagenet_data,
-                                              batch_size=1000,
+                                              batch_size=10,
                                               shuffle=True,
                                               num_workers=4)
 
@@ -33,7 +42,7 @@ if __name__ == "__main__":
         running_loss = 0.0
         for i, data in enumerate(data_loader, 0):
             # get the inputs
-            inputs, labels = data
+            inputs, labels, paths = data
             inputs = inputs.to(device)
             labels = labels.to(device)
 

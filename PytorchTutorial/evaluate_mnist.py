@@ -14,7 +14,7 @@ if __name__ == "__main__":
     just make sure the model learn something. we should not evaluate model on training set
     -- Meow --
     """
-    model_path = "/data/cv_data/minist/mnistasjpg/saved_model/MnistTutorialNet_1__31.509719610214233.model"
+    model_path = "/data/cv_data/minist/mnistasjpg/saved_model8/MnistTutorialNetV5_80__0.19937348179519176.model"
     # at beginning of the script
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

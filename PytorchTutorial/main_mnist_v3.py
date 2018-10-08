@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     # define a loss function
     criterion = nn.NLLLoss()
-    optimizer = optim.Adam(net.parameters(), weight_decay=1e-3, lr=1e-3)
+    optimizer = optim.Adam(net.parameters(), weight_decay=1e-4, lr=1e-3)
 
     for epoch in range(100):  # loop over the dataset multiple times
         net.train()
