@@ -43,6 +43,7 @@ if __name__ == "__main__":
                                               batch_size=40,
                                               num_workers=3)
 
+
     resultfile = open("result.csv", "w")
     resultfile.write("ImageId,Label\n")
     correct = 0
@@ -56,7 +57,7 @@ if __name__ == "__main__":
             _, predicted = torch.max(outputs.data, 1)
             for f, pred in zip(path, predicted):
                 id = get_img_id(f)
-                resultfile.write(str(id)+","+str(pred.item()) + "\n")
+                resultfile.write(str(id)+","+str(dataset.classes[pred.item()]) + "\n")
 
     resultfile.close()
     print("done")
